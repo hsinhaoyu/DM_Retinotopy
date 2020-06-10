@@ -15,4 +15,4 @@ This code was written to support a paper under review.
 
 ### About initialization
 - `elastic_net.optimize()` can only be run once. To repeat the same simulation with multiple random initialization, run the program multiple times with different random seeds, and save to different directories.
-- Scripts such as `scripts/simulateV2_sweep.py` run the simulation with different settings of the b1 (smoothness) and b2 (congruence) parameters. All these simulations will have the same initial map.
+- Scripts such as `scripts/simulateV2sweep.py` run the simulation with different settings of the b1 (smoothness) and b2 (congruence) parameters. All these simulations will have the same initial map.

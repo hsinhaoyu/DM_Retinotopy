@@ -1,0 +1,75 @@
+# this is the script used to generate V2 sweep
+
+from pathlib import Path
+import sys
+import numpy as np
+
+# this is a hack to import elastitopy without making it into a module
+import sys
+import os
+sys.path.append(os.path.abspath('../elastictopy'))
+
+from helpers import full_filename
+from helpers import clean_outdir
+
+from vf import generate_vf_landmarks
+from vf import export_vf_landmarks
+from retinotopy import generate_V1_boundary_retinotopy
+
+from elastic_net import initialize_map
+from elastic_net import optimize
+
+##### general parameters
+outdir          = "../results/simulateV2sweep"
+clean_dir       = True
+n_iterations    = 1800
+k0              = 30.0
+kr              = 0.003
+eta0            = 0.1
+##### the visual field prototypes to for the elastioc net to cover
+n_prototypes    = 400
+magnification   = -3.5
+ecc0            = 0.05
+ecc1            = 13
+
+##### Define The geometry of the cortical area to simulate
+boundary_len    = 30.0   # in milimeter
+map_h           = 40     # this is on the boundary
+map_w           = 5
+
+def main(rseed, outputdir):
+    if clean_dir:
+        clean_outdir(outputdir)
+    
+    x0 = generate_vf_landmarks(magnification, ecc0, ecc1, n_prototypes, vf='full',   filename=full_filename('vf', outputdir))
+    b0 = generate_V1_boundary_retinotopy(boundary_len, map_h,           branch='vd', filename=full_filename('boundary', outputdir))
+
+    y = initialize_map(map_h, map_w, x0, filename=full_filename('init', outputdir), random_seed = rseed)
+    
+    # loop through b1 and b2
+    b1s = [0.03*1.6**i for i in range(0, 8)]
+    b2s = [0.03*1.6**i for i in range(0, 8)]
+    print("b1:", b1s)
+    print("b2:", b2s)
+    for b1 in b1s:
+        for b2 in b2s:
+            print("b1 = %10.4f \t b2 = %10.4f"%(b1, b2))
+            optimize(x0, b0, b1, b2, map_h, map_w, y,
+                     k0 = k0,
+                     kr = kr,
+                     eta0 = eta0,
+                     outdir = outputdir,
+                     save_interval = 0,       # disable saving intermediate maps
+                     n = n_iterations,
+                     report_iterations = False,
+                     log_iterations = False)
+
+if __name__ == "__main__":
+    if len(sys.argv)==2:
+        rseed = int(sys.argv[1])
+        path = (Path(outdir) / str(rseed).zfill(3)).resolve()
+        path.mkdir(parents=False, exist_ok=True)
+        main(rseed, str(path))
+    else:
+        rseed = 0
+        main(rseed, outdir)
