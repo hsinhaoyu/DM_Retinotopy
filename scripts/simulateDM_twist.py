@@ -11,7 +11,7 @@ from elastic_net import initialize_map
 from elastic_net import optimize
 
 ##### general parameters
-outdir          = "../results/simulateDM"
+outdir          = "../results/simulateDM_twist"
 clean_dir       = True
 save_interval   = 100
 n_iterations    = 3000
