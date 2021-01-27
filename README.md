@@ -3,7 +3,7 @@
 ### About
 This code simulates the formation of retinotopic maps in the visual cortex, using a model that maps receptive fields of neurons in a visual area to the visual field. The model is constrained by the smoothness of the retinotopic map within the area, and by the congruence with a neighboring area.
 
-This code was written to support a paper under review.
+This code was supported for a computational neurosciecne paper: Yu et al. (2020) A twisted visual field map in the primate dorsomedial cortex predicted by topographic continuity. _Science Advances_ vol. 6, no. 44, eaaz8673. [[link]](https://advances.sciencemag.org/content/6/44/eaaz8673).
 
 ### How to run
 - Create a directory to save the results to under `results/`
